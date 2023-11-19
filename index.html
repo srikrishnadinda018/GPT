@@ -3,7 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat-output {
+            margin-bottom: 10px;
+        }
+
+        #user-input {
+            display: flex;
+        }
+
+        #user-input-box {
+            flex: 1;
+            padding: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    </style>
     <title>Wikipedia Chatbot</title>
 </head>
 <body>
@@ -14,6 +46,54 @@
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+        const chatOutput = document.getElementById('chat-output');
+        const userInputBox = document.getElementById('user-input-box');
+
+        function sendMessage() {
+            const userMessage = userInputBox.value;
+            if (userMessage.trim() === '') return;
+
+            appendMessage('user', userMessage);
+
+            // Replace the following placeholder with actual Wikipedia API call
+            fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${userMessage}`)
+                .then(response => response.json())
+                .then(data => {
+                    const searchResults = data.query.search;
+                    if (searchResults.length > 0) {
+                        const snippet = searchResults[0].snippet;
+                        appendMessage('bot', snippet);
+                    } else {
+                        appendMessage('bot', 'No results found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    appendMessage('bot', 'An error occurred while fetching data.');
+                });
+
+            // Clear user input
+            userInputBox.value = '';
+        }
+
+        function appendMessage(sender, message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add(sender);
+
+            const image = document.createElement('img');
+            image.src = (sender === 'user') ? 'user-image.png' : 'bot-image.png';
+
+            const text = document.createElement('p');
+            text.textContent = message;
+
+            messageContainer.appendChild(image);
+            messageContainer.appendChild(text);
+            chatOutput.appendChild(messageContainer);
+
+            // Scroll to the bottom for the latest message
+            chatOutput.scrollTop = chatOutput.scrollHeight;
+        }
+    </script>
 </body>
 </html>
