@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#chat-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#chat-output {
+    margin-bottom: 10px;
+}
+
+#user-input {
+    display: flex;
+}
+
+#user-input-box {
+    flex: 1;
+    padding: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    cursor: pointer;
+}
