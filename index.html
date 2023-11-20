@@ -1,36 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Application</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Wikipedia Chatbot</title>
 </head>
 <body>
-    <div class="chatbot-container">
-        <div class="chatbot-header">
-            <h1>Chatbot</h1>
-            <p>Ask me anything!</p>
-        </div>
+  <div class="chat-container">
+    <div class="chat-output" id="chat-output"></div>
+    <input type="text" id="user-input" placeholder="Type your query...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
-        <div class="chatbot-conversation">
-            <div class="user-message">
-                <p>Hello there!</p>
-            </div>
-
-            <div class="bot-message">
-                <p>Hi there! How can I help you today?</p>
-            </div>
-
-            <div class="user-message">
-                <input type="text" id="user-input" placeholder="Enter your query">
-                <button id="send-button">Send</button>
-            </div>
-
-            <div class="bot-response"></div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
