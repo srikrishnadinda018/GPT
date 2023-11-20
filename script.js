@@ -1,20 +1,34 @@
-// script.js
+function sendMessage() {
+  const userInput = document.getElementById('user-input').value;
+  const chatOutput = document.getElementById('chat-output');
 
-const userInput = document.getElementById('user-input');
-const sendButton = document.getElementById('send-button');
-const botResponse = document.querySelector('.bot-response');
+  // Display user's message
+  chatOutput.innerHTML += `<div>User: ${userInput}</div>`;
 
-sendButton.addEventListener('click', async () => {
-    const query = userInput.value.trim();
-    if (!query) {
-        return;
-    }
+  // Call Wikipedia API
+  getWikipediaData(userInput)
+    .then(response => {
+      // Display Wikipedia results
+      chatOutput.innerHTML += `<div>Wikipedia: ${response}</div>`;
+    })
+    .catch(error => {
+      console.error(error);
+      chatOutput.innerHTML += `<div>Error fetching Wikipedia data.</div>`;
+    });
 
-    const response = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exchars=200&titles=${query}`);
+  // Clear input field
+  document.getElementById('user-input').value = '';
+}
+
+async function getWikipediaData(query) {
+  const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro&titles=${query}&origin=*`;
+
+  try {
+    const response = await fetch(apiUrl);
     const data = await response.json();
-    const page = data.query.pages[Object.keys(data.query.pages)[0]];
-    const extract = page.extract;
-
-    botResponse.textContent = extract;
-    userInput.value = '';
-});
+    const pageId = Object.keys(data.query.pages)[0];
+    return data.query.pages[pageId].extract;
+  } catch (error) {
+    throw new Error('Failed to fetch Wikipedia data.');
+  }
+}
