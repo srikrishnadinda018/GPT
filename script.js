@@ -1,36 +1,20 @@
-const chatOutput = document.getElementById('chat-output');
-const userInputBox = document.getElementById('user-input-box');
+// script.js
 
-function sendMessage() {
-    const userMessage = userInputBox.value;
-    if (userMessage.trim() === '') return;
+const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-button');
+const botResponse = document.querySelector('.bot-response');
 
-    appendMessage('user', userMessage);
-    
-    // Call Wikipedia API (replace with actual API call)
-    // For simplicity, a placeholder response is used here.
-    const botMessage = `Wikipedia response for "${userMessage}"`;
-    
-    appendMessage('bot', botMessage);
+sendButton.addEventListener('click', async () => {
+    const query = userInput.value.trim();
+    if (!query) {
+        return;
+    }
 
-    // Clear user input
-    userInputBox.value = '';
-}
+    const response = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exchars=200&titles=${query}`);
+    const data = await response.json();
+    const page = data.query.pages[Object.keys(data.query.pages)[0]];
+    const extract = page.extract;
 
-function appendMessage(sender, message) {
-    const messageContainer = document.createElement('div');
-    messageContainer.classList.add(sender);
-
-    const image = document.createElement('img');
-    image.src = (sender === 'user') ? 'user-image.png' : 'bot-image.png';
-
-    const text = document.createElement('p');
-    text.textContent = message;
-
-    messageContainer.appendChild(image);
-    messageContainer.appendChild(text);
-    chatOutput.appendChild(messageContainer);
-
-    // Scroll to the bottom for the latest message
-    chatOutput.scrollTop = chatOutput.scrollHeight;
-}
+    botResponse.textContent = extract;
+    userInput.value = '';
+});
